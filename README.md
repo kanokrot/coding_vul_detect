@@ -1,10 +1,10 @@
 ﻿# coding_vul_detect
 
-# Code Vulnerability Detection System
+**Code Vulnerability Detection System**
 
 ระบบตรวจสอบช่องโหว่ทางความปลอดภัยในซอร์สโค้ด (Source Code Vulnerability Detection) พัฒนาด้วยภาษา Python โดยใช้ข้อมูลจาก DiverseVul dataset
 
-## 📂 โครงสร้างโปรเจกต์
+## โครงสร้างโปรเจกต์
 
 ```text
 code_vul_detect/
@@ -17,3 +17,4 @@ code_vul_detect/
 │   └── data_loader.py     # ตัวจัดการข้อมูล
 ├── data/                  # โฟลเดอร์เก็บ Dataset (ถูก exclude จาก git)
 └── README.md              # เอกสารอธิบายโปรเจกต์
+
