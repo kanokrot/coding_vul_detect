@@ -15,7 +15,7 @@ code_vul_detect/
 │   ├── fuzzy_logic.py
 │   └── data_loader.py
 ├── data/                  # โฟลเดอร์เก็บ Dataset
-└── README.md              # เอกสารอธิบายโปรเจกต์
+└── README.md              
 ```
 
 ## ติดตั้ง Library ที่จำเป็น
@@ -32,5 +32,6 @@ pip install -r requirements.txt
 ``` text
 python app.py
 ```
+
 
 
