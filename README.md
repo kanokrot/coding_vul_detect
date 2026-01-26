@@ -6,5 +6,15 @@
 
 ## ติดตั้ง Library ที่จำเป็น
 
+``` text
 pip install -r requirements.txt
+```
+## เตรียมข้อมูล (Data Setup)
 
+นำไฟล์ diversevul_20230702.json ไปวางไว้ในโฟลเดอร์ data/
+
+## รันโปรแกรม
+
+``` text
+python app.py
+```
