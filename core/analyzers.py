@@ -112,7 +112,7 @@ def scan_with_ai_model(code_snippet):
         return prob, vuln_name
 
     except Exception as e:
-        print(f"❌ AI Error: {e}") 
+        print(f"AI Error: {e}") 
         return 0.0, "AI Error"
 
 def apply_fuzzy_logic(ai_prob, entropy):

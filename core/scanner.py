@@ -16,7 +16,7 @@ def hybrid_scanning_system(file_obj, git_url):
     """
     # 1. เช็ค Input
     if file_obj is None and not git_url:
-        gr.Warning("⚠️ กรุณาอัปโหลดไฟล์ หรือใส่ลิงก์ Git ก่อนกดสแกนครับ!") 
+        gr.Warning("กรุณาอัปโหลดไฟล์ หรือใส่ลิงก์ Git ก่อนกดสแกน") 
         return "Waiting for input...", pd.DataFrame(), ""
 
     file_path = file_obj.name if file_obj else "Git URL"
