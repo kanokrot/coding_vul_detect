@@ -1,76 +1,87 @@
-import ollama
-import pandas as pd
+import google.generativeai as genai
 import gradio as gr
+import os
+
+# ==========================================
+# CONFIGURATION
+# ==========================================
+# 🔑 ไปเอา Key จาก aistudio.google.com มาใส่ตรงนี้
+GENAI_API_KEY = "AIzaSyDxxxx_ใส่คีย์ของคุณตรงนี้_xxxx"
 
 def get_ai_fix_suggestion(code_snippet, vuln_name):
     """
-    ฟังก์ชันภายใน: ส่งโค้ดไปถามวิธีแก้จาก Ollama
+    ฟังก์ชันภายใน: ส่งโค้ดไปถามวิธีแก้จาก Google Gemini
     """
     try:
+        # ตั้งค่าโมเดล
+        genai.configure(api_key=GENAI_API_KEY)
+        model = genai.GenerativeModel('gemini-1.5-flash') # ใช้รุ่น Flash (ฟรี & เร็ว)
+
         prompt_text = f"""
-        You are a security expert. The following C/C++ code has a vulnerability identified as "{vuln_name}".
-        
-        Code:
-        {code_snippet[:1500]} 
-        
-        Task:
-        1. Explain briefly how to fix it.
-        2. Provide the CORRECTED code snippet.
-        3. Keep the answer concise.
+        Act as a Senior Cyber Security Specialist.
+        I have detected a vulnerability: "{vuln_name}" in the following C/C++ code.
+
+        VULNERABLE CODE:
+        ```c
+        {code_snippet[:2000]} 
+        ```
+
+        YOUR TASK:
+        1. Explain briefly why this is dangerous.
+        2. Provide the FIXED code snippet (Secure version).
+        3. Use Markdown formatting.
         """
         
-        # เรียก AI
-        response = ollama.generate(model='codellama:7b', prompt=prompt_text)
-        return response['response'].strip()
+        # เรียก AI (Gemini)
+        response = model.generate_content(prompt_text)
+        return response.text
+        
     except Exception as e:
-        return f"Could not generate fix: {str(e)}"
+        return f"⚠️ API Error: {str(e)} (Check your Internet or API Key)"
 
 def generate_remediation_report(df, files_to_scan):
     """
-    ฟังก์ชันหลัก: สร้างข้อความแนะนำการแก้ไข (Remediation Report)
-    รับค่า:
-      - df: ตารางผลลัพธ์ (DataFrame)
-      - files_to_scan: ลิสต์ข้อมูลไฟล์เดิม [(name, code), ...]
-    คืนค่า:
-      - ข้อความ String ที่จัด Format แล้ว
+    ฟังก์ชันหลัก: สร้าง Report แนะนำวิธีแก้
     """
-    report_text = "### 🛠️ Remediation Suggestions\n"
+    report_text = "### 🛠️ Remediation Suggestions (Powered by Gemini)\n"
     
-    # 1. หาไฟล์ที่มีความเสี่ยงระดับ Critical หรือ High
-    critical_files = df[df["Severity"].isin(["Critical", "High"])]
+    # 1. กรองเฉพาะไฟล์ที่มีความเสี่ยง (Risk Score > 40)
+    # เราไม่จำเป็นต้องเอาแค่ Top 1 แล้ว เพราะ Gemini ทำงานเร็วมาก สแกนทุกไฟล์ที่เสี่ยงได้เลย
+    risky_files = df[df["Risk Score"] > 40]
     
-    if critical_files.empty:
-        report_text += "\nGreat job! No critical vulnerabilities detected."
+    if risky_files.empty:
+        report_text += "\n✅ Great job! No significant vulnerabilities detected."
         return report_text
 
-    # 2. เลือกมา 1 ไฟล์ที่หนักที่สุดเพื่อแนะนำ (เพื่อไม่ให้รอนานเกินไป)
-    # เรียงลำดับตาม Risk Score มากไปน้อย
-    top_risk_file = critical_files.sort_values(by="Risk Score", ascending=False).iloc[0]
-    
-    fname = top_risk_file["Filename"]
-    vname = top_risk_file["Type"]
-    risk = top_risk_file["Risk Score"]
-    
-    report_text += f"#### 🔥 Priority Fix: {fname} (Risk: {risk}%)\n"
-    report_text += f"**Detected Issue:** {vname}\n\n"
-    
-    # 3. ค้นหา Source Code เดิมของไฟล์นั้น
-    original_code = ""
-    for name, content in files_to_scan:
-        if name == fname:
-            original_code = content
+    # 2. วนลูปสร้างคำแนะนำทีละไฟล์
+    count = 0
+    for index, row in risky_files.iterrows():
+        # จำกัดจำนวน (เผื่อเจอ 100 ไฟล์ เดี๋ยว Token หมด) เอาแค่ 3 ไฟล์ที่หนักสุด
+        if count >= 3: 
+            report_text += "\n*(Showing top 3 risky files only)*"
             break
-    
-    if original_code:
-        # แจ้งเตือนผู้ใช้ว่า AI กำลังคิด (ผ่าน Gradio)
-        gr.Info(f"🤖 AI is generating a fix for {fname}...")
+            
+        fname = row["Filename"]
+        vname = row["Type"]
+        risk = row["Risk Score"]
         
-        # เรียกฟังก์ชันขอวิธีแก้
-        fix_advice = get_ai_fix_suggestion(original_code, vname)
+        # ค้นหา Source Code
+        original_code = ""
+        for name, content in files_to_scan:
+            if name == fname:
+                original_code = content
+                break
         
-        report_text += f"**💡 AI Recommendation:**\n\n{fix_advice}\n"
-        report_text += "\n---\n"
-    else:
-        report_text += "⚠️ Error: Could not find original source code."
-
+        if original_code:
+            # แจ้งเตือนใน UI ว่ากำลังถาม AI
+            gr.Info(f"🤖 Asking Gemini to fix: {fname}...")
+            
+            fix_advice = get_ai_fix_suggestion(original_code, vname)
+            
+            report_text += f"#### 🔥 File: `{fname}` (Risk: {risk}%)\n"
+            report_text += f"**Issue:** {vname}\n\n"
+            report_text += f"{fix_advice}\n"
+            report_text += "---\n"
+            count += 1
+            
     return report_text

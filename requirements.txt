@@ -2,7 +2,6 @@ gradio
 pandas
 numpy
 scikit-fuzzy
-transformers
-torch
 gitpython
-accelerate
+requests
+google-generativeai

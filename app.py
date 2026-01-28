@@ -57,7 +57,6 @@ with gr.Blocks(title="VulnDetect AI") as demo:
                     # ตารางผลลัพธ์
                     table_output = gr.Dataframe(
                     headers=["Filename", "Type", "AI Conf.", "Entropy", "Risk Score", "Severity"],
-                    # 👇 แก้ตรงนี้: เปลี่ยน number เป็น str ให้หมด ยกเว้น Risk Score
                     datatype=["str", "str", "str", "str", "number", "str"], 
                     label="Detected Issues"
                     )
