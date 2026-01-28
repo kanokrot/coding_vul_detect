@@ -3,11 +3,11 @@ import os
 import zipfile
 import pandas as pd
 import gradio as gr
-from core.analyzers import calculate_shannon_entropy, scan_with_ai_model, apply_fuzzy_logic
+from core.analyzers import calculate_shannon_entropy, scan_with_ai_model
+from core.fuzzy_logic import calculate_fuzzy_risk 
 from core.remediator import generate_remediation_report
-
 # ==========================================
-# Main System (ระบบหลัก)
+# Main System
 # ==========================================
 
 def hybrid_scanning_system(file_obj, git_url):
@@ -74,7 +74,10 @@ def hybrid_scanning_system(file_obj, git_url):
         ai_prob, vuln_name = scan_with_ai_model(code_content) 
         
         # C. ประเมินความเสี่ยง
-        risk_score, severity = apply_fuzzy_logic(ai_prob, entropy)
+        risk_score, severity, prob_label, ent_label = calculate_fuzzy_risk(ai_prob, entropy)
+
+        display_ai = f"{ai_prob:.2f} ({prob_label})"
+        display_ent = f"{entropy:.2f} ({ent_label})"
         
         results.append([
             filename, 

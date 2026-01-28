@@ -37,7 +37,7 @@ with gr.Blocks(title="VulnDetect AI") as demo:
                     gr.Markdown("### Input Source")
                     with gr.Tab("Upload File"):
                         file_input = gr.File(
-                            label="📁 Upload Source Code (.c, .cpp, .zip)",
+                            label="Upload Source Code (.c, .cpp, .zip)",
                             file_count="single",
                             file_types=[".c", ".cpp", ".h", ".hpp", ".zip"]
                             )
@@ -56,9 +56,10 @@ with gr.Blocks(title="VulnDetect AI") as demo:
                     
                     # ตารางผลลัพธ์
                     table_output = gr.Dataframe(
-                        headers=["Filename", "Type", "AI Prob.", "Entropy", "Risk Score", "Severity"],
-                        datatype=["str", "str", "number", "number", "number", "str"],
-                        label="Detected Issues"
+                    headers=["Filename", "Type", "AI Conf.", "Entropy", "Risk Score", "Severity"],
+                    # 👇 แก้ตรงนี้: เปลี่ยน number เป็น str ให้หมด ยกเว้น Risk Score
+                    datatype=["str", "str", "str", "str", "number", "str"], 
+                    label="Detected Issues"
                     )
                     
                     remediation_output = gr.Markdown("Remediation advice will appear here.")
