@@ -4,17 +4,24 @@ from core.scanner import hybrid_scanning_system
 from core.data_loader import load_vulnerability_dataset
 
 # ==========================================
-#CONFIGURATION
+# 🟢 1. สร้างฟังก์ชันล้างหน้าจอ (เก็บไว้เผื่อใช้กับปุ่ม Clear ในอนาคต)
+# ==========================================
+def clear_results():
+    """คืนค่าว่างเพื่อไปทับผลการสแกนเดิม"""
+    return "Waiting for input...", pd.DataFrame(), "Remediation advice will appear here."
+
+# ==========================================
+# CONFIGURATION
 # ==========================================
 DATASET_PATH = "data/diversevul_20230702.json" 
 
 # ==========================================
-#LOAD DATA
+# LOAD DATA
 # ==========================================
 df_dataset = load_vulnerability_dataset(DATASET_PATH)
 
 # ==========================================
-#UI (GRADIO)
+# UI (GRADIO)
 # ==========================================
 with gr.Blocks(title="VulnDetect AI") as demo:
     
@@ -40,7 +47,7 @@ with gr.Blocks(title="VulnDetect AI") as demo:
                             label="Upload Source Code (.c, .cpp, .zip)",
                             file_count="single",
                             file_types=[".c", ".cpp", ".h", ".hpp", ".zip"]
-                            )
+                        )
                     with gr.Tab("Git Repo"):
                         url_input = gr.Textbox(label="Git URL", placeholder="https://github.com/...")
                     
@@ -51,28 +58,34 @@ with gr.Blocks(title="VulnDetect AI") as demo:
 
                 # Output Zone
                 with gr.Column(scale=2):
-                    gr.Markdown("###Analysis Result")
+                    gr.Markdown("Analysis Result")
                     status_output = gr.Markdown("Waiting for input...")
                     
                     # ตารางผลลัพธ์
                     table_output = gr.Dataframe(
-                    headers=["Filename", "Type", "AI Conf.", "Entropy", "Risk Score", "Severity"],
-                    datatype=["str", "str", "str", "str", "number", "str"], 
-                    label="Detected Issues"
+                        headers=["Filename", "Type", "AI Conf.", "Entropy", "Risk Score", "Severity"],
+                        datatype=["str", "str", "str", "str", "number", "str"], 
+                        label="Detected Issues"
                     )
                     
                     remediation_output = gr.Markdown("Remediation advice will appear here.")
 
-            # Event Trigger
+            # ---------------------------------------------------------
+            # 🟢 2. Event Triggers (ส่วนที่ควบคุมการทำงาน)
+            # ---------------------------------------------------------
+            # Event กดปุ่มสแกน
             scan_btn.click(
                 fn=hybrid_scanning_system,
                 inputs=[file_input, url_input],
                 outputs=[status_output, table_output, remediation_output]
             )
+            
+            # ❌ ลบ Event .clear() ที่พังออกไปแล้ว ❌
+            # ทำให้ Gradio เวอร์ชันของคุณทำงานได้แบบไม่มีสะดุด
 
         # === Tab 2: Knowledge Base ===
         with gr.TabItem("Knowledge Base (DiverseVul)"):
-            gr.Markdown(f"###Training Data Preview")
+            gr.Markdown(f"Training Data Preview")
             gr.Markdown("ตัวอย่างข้อมูลจาก **DiverseVul Dataset** (โหลดมาแสดงผล 100 ตัวอย่างแรก)")
             
             if not df_dataset.empty:
