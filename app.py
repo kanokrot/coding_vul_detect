@@ -1,109 +1,38 @@
+"""
+app.py — Entry point for VulnDetect AI
+"""
+
 import gradio as gr
-import pandas as pd
-from core.scanner import hybrid_scanning_system
+from pathlib import Path
 from core.data_loader import load_vulnerability_dataset
+from ui.components import HEADER_HTML
+from ui.tab_scanner import build_scanner_tab
+from ui.tab_benchmark import build_benchmark_tab
+from ui.tab_knowledge import build_knowledge_tab
 
-# ==========================================
-# 🟢 1. สร้างฟังก์ชันล้างหน้าจอ (เก็บไว้เผื่อใช้กับปุ่ม Clear ในอนาคต)
-# ==========================================
-def clear_results():
-    """คืนค่าว่างเพื่อไปทับผลการสแกนเดิม"""
-    return "Waiting for input...", pd.DataFrame(), "Remediation advice will appear here."
+# ── Config ────────────────────────────────────────────
+DATASET_PATH = "data/diversevul_20230702.json"
 
-# ==========================================
-# CONFIGURATION
-# ==========================================
-DATASET_PATH = "data/diversevul_20230702.json" 
-
-# ==========================================
-# LOAD DATA
-# ==========================================
+# ── Load data ─────────────────────────────────────────
 df_dataset = load_vulnerability_dataset(DATASET_PATH)
 
-# ==========================================
-# UI (GRADIO)
-# ==========================================
-with gr.Blocks(title="VulnDetect AI") as demo:
-    
-    # --- 1. Header ---
-    with gr.Row(variant="panel"):
-        with gr.Column(scale=1):
-            gr.Markdown("""
-            # Hybrid Vulnerability Detection System
-            **Detect C/C++ Vulnerabilities using Code Llama + Shannon Entropy + Fuzzy Logic**
-            """)
+# ── Load styles ───────────────────────────────────────
+custom_css = Path("styles.css").read_text(encoding="utf-8")
 
-    # --- 2. Main Tabs ---
+# ── Build UI ──────────────────────────────────────────
+with gr.Blocks(title="VulnDetect AI", css=custom_css) as demo:
+
+    with gr.Row(elem_classes="app-header"):
+        gr.HTML(HEADER_HTML)
+
     with gr.Tabs():
-        
-        # === Tab 1: Scanner ===
-        with gr.TabItem("Scanner Engine"):
-            with gr.Row():
-                # Input Zone
-                with gr.Column(scale=1):
-                    gr.Markdown("### Input Source")
-                    with gr.Tab("Upload File"):
-                        file_input = gr.File(
-                            label="Upload Source Code (.c, .cpp, .zip)",
-                            file_count="single",
-                            file_types=[".c", ".cpp", ".h", ".hpp", ".zip"]
-                        )
-                    with gr.Tab("Git Repo"):
-                        url_input = gr.Textbox(label="Git URL", placeholder="https://github.com/...")
-                    
-                    scan_btn = gr.Button("Start Scanning", variant="primary", size="lg")
-                    
-                    with gr.Accordion("System Status", open=False):
-                        gr.Markdown("- **Model:** CodeLlama-7b-hf\n- **Device:** cuda:0\n- **Entropy Threshold:** 4.5")
+        build_scanner_tab()
+        build_benchmark_tab()
+        build_knowledge_tab(df_dataset, DATASET_PATH)
 
-                # Output Zone
-                with gr.Column(scale=2):
-                    gr.Markdown("Analysis Result")
-                    status_output = gr.Markdown("Waiting for input...")
-                    
-                    # ตารางผลลัพธ์
-                    table_output = gr.Dataframe(
-                        headers=["Filename", "Type", "AI Conf.", "Entropy", "Risk Score", "Severity"],
-                        datatype=["str", "str", "str", "str", "number", "str"], 
-                        label="Detected Issues"
-                    )
-                    
-                    remediation_output = gr.Markdown("Remediation advice will appear here.")
-
-            # ---------------------------------------------------------
-            # 🟢 2. Event Triggers (ส่วนที่ควบคุมการทำงาน)
-            # ---------------------------------------------------------
-            # Event กดปุ่มสแกน
-            scan_btn.click(
-                fn=hybrid_scanning_system,
-                inputs=[file_input, url_input],
-                outputs=[status_output, table_output, remediation_output]
-            )
-            
-            # ❌ ลบ Event .clear() ที่พังออกไปแล้ว ❌
-            # ทำให้ Gradio เวอร์ชันของคุณทำงานได้แบบไม่มีสะดุด
-
-        # === Tab 2: Knowledge Base ===
-        with gr.TabItem("Knowledge Base (DiverseVul)"):
-            gr.Markdown(f"Training Data Preview")
-            gr.Markdown("ตัวอย่างข้อมูลจาก **DiverseVul Dataset** (โหลดมาแสดงผล 100 ตัวอย่างแรก)")
-            
-            if not df_dataset.empty:
-                display_cols = ['project', 'Label', 'cwe', 'message', 'func']
-                final_cols = [c for c in display_cols if c in df_dataset.columns]
-                
-                gr.Dataframe(
-                    value=df_dataset[final_cols],
-                    label="Dataset Samples",
-                    interactive=False,
-                    wrap=True
-                )
-            else:
-                gr.Warning(f"ไม่พบข้อมูลใน {DATASET_PATH} หรืออ่านไฟล์ไม่สำเร็จ")
-
-# --- Launch ---
+# ── Launch ────────────────────────────────────────────
 if __name__ == "__main__":
     try:
-        demo.launch(theme=gr.themes.Soft()) 
+        demo.launch(theme=gr.themes.Base())
     except TypeError:
         demo.launch()
