@@ -1,7 +1,7 @@
-gradio
-pandas
-numpy
-scikit-fuzzy
-gitpython
-requests
-google-generativeai
+gradio==6.8.0
+numpy==2.4.2
+ollama==0.6.1
+pandas==3.0.1
+protobuf==7.34.0
+python-dotenv==1.2.2
+scikit_fuzzy==0.5.0
