@@ -483,3 +483,14 @@ div.svelte-1ipelgc,
     border-color: var(--accent-cyan);
     color: var(--accent-cyan);
 }
+
+/* ─── Results Table Horizontal Scroll ──────────────── */
+.results-table,
+.results-table [data-testid="dataframe"],
+.results-table [data-testid="dataframe"] > div {
+    overflow-x: auto !important;
+}
+
+.results-table table {
+    min-width: 900px !important;
+}

@@ -1,7 +1,3 @@
-"""
-ui/tab_scanner.py — Scanner Engine tab
-"""
-
 import gradio as gr
 from core.scanner import hybrid_scanning_system
 
@@ -47,9 +43,10 @@ def build_scanner_tab():
                 table_output = gr.Dataframe(
                     headers=["Filename", "Type", "AI Prob.", "Entropy", "Risk Score", "Severity"],
                     datatype=["str", "str", "str", "str", "number", "str"],
-                    label="Detected Issues"
-                )
-
+                    label="Detected Issues",
+                    wrap=False,
+                    elem_classes="results-table"
+                    )
                 gr.HTML('<div class="section-heading" style="margin-top:8px;">Remediation</div>')
 
                 remediation_output = gr.Markdown(
