@@ -130,3 +130,23 @@ METRIC_GUIDE_HTML = """
     <div style="margin-top:6px;color:#7a8099;">Target: F1 &gt; 80%</div>
 </div>
 """
+
+THEME_TOGGLE_HTML = """
+<button class="theme-toggle" onclick="
+    const body = document.body;
+    const isDark = body.getAttribute('data-theme') !== 'light';
+    body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    this.innerHTML = isDark ? '☀︎ LIGHT' : '⏾ DARK';
+    localStorage.setItem('theme', isDark ? 'light' : 'dark');
+" id="theme-btn">⏾ DARK</button>
+
+<script>
+    // Restore saved theme on page load
+    const saved = localStorage.getItem('theme') || 'dark';
+    document.body.setAttribute('data-theme', saved);
+    setTimeout(() => {
+        const btn = document.getElementById('theme-btn');
+        if (btn) btn.innerHTML = saved === 'light' ? '☀︎ LIGHT' : '⏾ DARK';
+    }, 100);
+</script>
+"""

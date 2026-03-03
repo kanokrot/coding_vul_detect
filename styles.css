@@ -398,3 +398,88 @@ div.svelte-1ipelgc,
 .built-with { 
     display: none !important; 
 }
+
+/* ─── Light Theme ───────────────────────────────── */
+[data-theme="light"] {
+    --bg-primary:    #f0f2f8;
+    --bg-secondary:  #e4e7f0;
+    --bg-card:       #ffffff;
+    --bg-card-hover: #f5f7ff;
+    --border:        #d0d4e8;
+    --border-accent: #b8bdd4;
+    --text-primary:  #1a1d2e;
+    --text-secondary:#3d4460;
+    --text-muted:    #8890b0;
+    --glow-cyan:     0 0 20px rgba(0, 150, 200, 0.2);
+    --glow-green:    0 0 20px rgba(0, 180, 100, 0.2);
+}
+
+[data-theme="light"] body,
+[data-theme="light"] .gradio-container {
+    background: var(--bg-primary) !important;
+    color: var(--text-primary) !important;
+}
+
+[data-theme="light"] .app-header {
+    background: linear-gradient(135deg, #e8ecf8 0%, #dde3f5 50%, #e4eaf8 100%);
+    border-bottom: 1px solid var(--border);
+}
+
+[data-theme="light"] .app-header::before {
+    background: radial-gradient(circle, rgba(0,150,200,0.08) 0%, transparent 70%);
+}
+
+[data-theme="light"] table th {
+    background: var(--bg-secondary) !important;
+}
+
+[data-theme="light"] input[type="text"],
+[data-theme="light"] textarea {
+    background: var(--bg-card) !important;
+    color: var(--text-primary) !important;
+}
+
+[data-theme="light"] .tabs > .tab-nav {
+    background: var(--bg-secondary) !important;
+}
+
+[data-theme="light"] .tabitem {
+    background: var(--bg-primary) !important;
+}
+
+[data-theme="light"] .remediation-box {
+    background: var(--bg-card);
+}
+
+[data-theme="light"] .gr-accordion,
+[data-theme="light"] details {
+    background: var(--bg-card) !important;
+}
+
+/* Toggle Button */
+.theme-toggle {
+    position: fixed;
+    top: 18px;
+    right: 24px;
+    z-index: 9999;
+    background: var(--bg-card);
+    border: 1px solid var(--border-accent);
+    border-radius: 50px;
+    padding: 7px 14px;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.theme-toggle:hover {
+    border-color: var(--accent-cyan);
+    color: var(--accent-cyan);
+}

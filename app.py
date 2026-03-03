@@ -1,11 +1,7 @@
-"""
-app.py — Entry point for VulnDetect AI
-"""
-
 import gradio as gr
 from pathlib import Path
 from core.data_loader import load_vulnerability_dataset
-from ui.components import HEADER_HTML
+from ui.components import HEADER_HTML, THEME_TOGGLE_HTML
 from ui.tab_scanner import build_scanner_tab
 from ui.tab_benchmark import build_benchmark_tab
 from ui.tab_knowledge import build_knowledge_tab
@@ -24,6 +20,8 @@ with gr.Blocks(title="VulnDetect AI", css=custom_css) as demo:
 
     with gr.Row(elem_classes="app-header"):
         gr.HTML(HEADER_HTML)
+
+        gr.HTML(THEME_TOGGLE_HTML)
 
     with gr.Tabs():
         build_scanner_tab()

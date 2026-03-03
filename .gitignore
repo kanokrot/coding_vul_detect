@@ -1,2 +1,7 @@
-﻿__pycache__/
+﻿venv/
+venv311/
+__pycache__/
+*.pyc
+models/
 data/diversevul_20230702.json
+.env

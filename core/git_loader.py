@@ -48,7 +48,7 @@ def clone_and_read_repo(git_url):
         raise Exception(str(e))
         
     finally:
-        # 🟢 4. ลบโฟลเดอร์ทิ้งแบบไม่สน Error (แก้ปัญหา WinError 5 ตอนจบ)
+        # 4. ลบโฟลเดอร์ทิ้งแบบไม่สน Error (แก้ปัญหา WinError 5 ตอนจบ)
         if os.path.exists(temp_dir):
             shutil.rmtree(temp_dir, ignore_errors=True)
 
