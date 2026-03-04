@@ -75,7 +75,7 @@ code_vul_detect/
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/yourusername/code_vul_detect.git
+git clone https://github.com/kanokrot/code_vul_detect.git
 cd code_vul_detect
 ```
 
@@ -229,4 +229,5 @@ Based on: *Shin et al., "Data Discretization and Decision Boundary Data Point An
 - [DiverseVul Dataset](https://github.com/wagner-group/diversevul)
 - [CodeLlama by Meta](https://github.com/facebookresearch/codellama)
 - [CodeBERT by Microsoft](https://github.com/microsoft/CodeBERT)
+
 - [Google Gemini API](https://ai.google.dev)
