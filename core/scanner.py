@@ -8,6 +8,7 @@ from core.analyzers import calculate_shannon_entropy, scan_with_ai_model
 from core.fuzzy_logic import calculate_fuzzy_risk
 from core.remediator import generate_remediation_report
 from core.git_loader import clone_and_read_repo
+from core.rate_limiter import check_rate_limit
 
 # Risk threshold — lower = catch more vulnerabilities (fewer FN)
 RISK_THRESHOLD      = 25
@@ -23,6 +24,11 @@ def hybrid_scanning_system(file_obj, git_url):
     if file_obj is None and not git_url:
         gr.Warning("กรุณาอัปโหลดไฟล์ หรือใส่ลิงก์ Git ก่อนกดสแกน")
         return "Waiting for input...", pd.DataFrame(), ""
+
+    # ── 1.5 Rate limit check ──────────────────────
+    allowed, message = check_rate_limit()
+    if not allowed:
+        return message, pd.DataFrame(), ""
 
     source_name   = file_obj.name if file_obj else git_url
     files_to_scan = []

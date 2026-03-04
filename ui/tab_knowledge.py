@@ -1,7 +1,3 @@
-"""
-ui/tab_knowledge.py — Knowledge Base tab
-"""
-
 import gradio as gr
 import pandas as pd
 

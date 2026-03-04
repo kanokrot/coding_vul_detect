@@ -18,9 +18,9 @@ MODEL_NAME    = "microsoft/codebert-base"
 DATASET_PATH  = "data/diversevul_20230702.json"
 OUTPUT_DIR    = "models/codebert-vuln"
 MAX_LENGTH    = 512
-BATCH_SIZE    = 4
-EPOCHS        = 10
-LEARNING_RATE = 1e-5
+BATCH_SIZE    = 8
+EPOCHS        = 5
+LEARNING_RATE = 2e-5
 
 
 # ── 1. Load Dataset ────────────────────────────────
@@ -104,7 +104,8 @@ def train():
     data = load_data(DATASET_PATH, max_samples=10000)
 
     train_data, val_data = train_test_split(
-        data, test_size=0.2, random_state=42,
+        data, test_size=0.1,
+        random_state=42,
         stratify=[d["label"] for d in data]
     )
     print(f"Train: {len(train_data)} | Val: {len(val_data)}")
@@ -123,22 +124,23 @@ def train():
     Path(OUTPUT_DIR).mkdir(parents=True, exist_ok=True)
 
     args = TrainingArguments(
-    output_dir=OUTPUT_DIR,
-    num_train_epochs=EPOCHS,
-    per_device_train_batch_size=BATCH_SIZE,
-    per_device_eval_batch_size=BATCH_SIZE,
-    learning_rate=LEARNING_RATE,
-    eval_strategy="epoch",  
-    save_strategy="epoch",
-    load_best_model_at_end=True,
-    metric_for_best_model="recall",
-    greater_is_better=True,
-    logging_steps=50,
-    warmup_ratio=0.1,
-    weight_decay=0.01,
-    fp16=torch.cuda.is_available(),
-    report_to="none",
-)
+        output_dir=OUTPUT_DIR,
+        num_train_epochs=EPOCHS,
+        per_device_train_batch_size=BATCH_SIZE,
+        per_device_eval_batch_size=BATCH_SIZE,
+        learning_rate=LEARNING_RATE,
+        eval_strategy="epoch",
+        save_strategy="epoch",
+        load_best_model_at_end=True,
+        metric_for_best_model="f1",
+        greater_is_better=True,
+        logging_steps=50,
+        warmup_ratio=0.1,
+        weight_decay=0.01,
+        fp16=torch.cuda.is_available(),
+        report_to="none",
+        save_total_limit=2,
+    )
 
     trainer = Trainer(
         model=model,
@@ -146,7 +148,7 @@ def train():
         train_dataset=train_dataset,
         eval_dataset=val_dataset,
         compute_metrics=compute_metrics,
-        callbacks=[EarlyStoppingCallback(early_stopping_patience=2)]
+        callbacks=[EarlyStoppingCallback(early_stopping_patience=3)]
     )
 
     print("Training...")
