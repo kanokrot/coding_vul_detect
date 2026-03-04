@@ -18,13 +18,13 @@ MODEL_NAME    = "microsoft/codebert-base"
 DATASET_PATH  = "data/diversevul_20230702.json"
 OUTPUT_DIR    = "models/codebert-vuln"
 MAX_LENGTH    = 512
-BATCH_SIZE    = 8
-EPOCHS        = 5
-LEARNING_RATE = 2e-5
+BATCH_SIZE    = 4
+EPOCHS        = 10
+LEARNING_RATE = 1e-5
 
 
 # ── 1. Load Dataset ────────────────────────────────
-def load_data(path: str, max_samples: int = 5000):
+def load_data(path: str, max_samples: int = 10000):
     """Load balanced dataset from DiverseVul."""
     vulnerable, safe = [], []
 
@@ -101,7 +101,7 @@ def compute_metrics(eval_pred):
 # ── 4. Train ───────────────────────────────────────
 def train():
     print("Loading dataset...")
-    data = load_data(DATASET_PATH, max_samples=5000)
+    data = load_data(DATASET_PATH, max_samples=10000)
 
     train_data, val_data = train_test_split(
         data, test_size=0.2, random_state=42,
@@ -128,7 +128,7 @@ def train():
     per_device_train_batch_size=BATCH_SIZE,
     per_device_eval_batch_size=BATCH_SIZE,
     learning_rate=LEARNING_RATE,
-    eval_strategy="epoch",          # ← was evaluation_strategy
+    eval_strategy="epoch",  
     save_strategy="epoch",
     load_best_model_at_end=True,
     metric_for_best_model="recall",

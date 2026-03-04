@@ -45,7 +45,8 @@ def build_scanner_tab():
                     datatype=["str", "str", "str", "str", "number", "str"],
                     label="Detected Issues",
                     wrap=False,
-                    elem_classes="results-table"
+                    elem_classes="results-table",
+                    column_widths=["20%", "35%", "10%", "10%", "12%", "17%"]
                     )
                 gr.HTML('<div class="section-heading" style="margin-top:8px;">Remediation</div>')
 

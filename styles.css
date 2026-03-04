@@ -494,3 +494,10 @@ div.svelte-1ipelgc,
 .results-table table {
     min-width: 900px !important;
 }
+
+/* ─── Type Column Wrap ──────────────────────────────── */
+.results-table table td:nth-child(2) {
+    white-space: normal !important;
+    word-break: break-word !important;
+    min-width: 500px !important;
+}

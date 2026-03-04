@@ -1,7 +1,3 @@
-"""
-ui/tab_benchmark.py — Benchmark tab
-"""
-
 import gradio as gr
 import pandas as pd
 from core.benchmark import run_benchmark, load_cached_results, records_to_dataframe

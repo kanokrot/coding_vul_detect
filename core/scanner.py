@@ -112,18 +112,26 @@ def hybrid_scanning_system(file_obj, git_url):
         print(f"   > {filename}: Risk={risk_score}%  Severity={severity}")
 
     # ── 6. Build report ───────────────────────────────────────
-    df          = pd.DataFrame(
+    df = pd.DataFrame(
         results,
         columns=["Filename", "Type", "AI Prob.", "Entropy", "Risk Score", "Severity"]
     )
-    filtered_df = df[df["Risk Score"] > RISK_THRESHOLD]
-    high_df     = filtered_df[filtered_df["Risk Score"] > HIGH_RISK_THRESHOLD]
+    filtered_df    = df[df["Risk Score"] > RISK_THRESHOLD]
+    high_df        = filtered_df[filtered_df["Risk Score"] > HIGH_RISK_THRESHOLD]
+
+    critical_count = len(df[df["Severity"] == "Critical"])
+    high_count     = len(df[df["Severity"] == "High"])
+    medium_count   = len(df[df["Severity"] == "Medium"])
+    low_count      = len(df[df["Severity"] == "Low"])
 
     summary_text = f"""### Scanning Complete
 - **Source:** {git_url if git_url else 'Uploaded File'}
 - **Files Analyzed:** {len(files_to_scan)}
-- **Issues Found:** {len(filtered_df)}
-- **High/Critical Severity:** {len(high_df)}
+---
+- 🔴 **Critical:** {critical_count}
+- 🟠 **High:** {high_count}
+- 🟡 **Medium:** {medium_count}
+- 🟢 **Low / Safe:** {low_count}
 """
 
     # ── 7. Remediation ────────────────────────────────────────

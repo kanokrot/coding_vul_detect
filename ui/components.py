@@ -1,4 +1,3 @@
-
 def format_metric_card(label, value, unit="%", color="cyan") -> str:
     colors = {
         "cyan":   ("#00d4ff", "rgba(0,212,255,0.08)",  "rgba(0,212,255,0.25)"),
@@ -7,15 +6,22 @@ def format_metric_card(label, value, unit="%", color="cyan") -> str:
         "orange": ("#ff8c42", "rgba(255,140,66,0.08)",  "rgba(255,140,66,0.25)"),
     }
     fg, bg, border = colors.get(color, colors["cyan"])
+    
     return f"""
     <div style="background:{bg};border:1px solid {border};border-radius:8px;
-                padding:20px 16px;text-align:center;flex:1;min-width:120px;">
+                padding:20px 8px; text-align:center; flex:1; min-width:120px; 
+                box-sizing: border-box; overflow: hidden;">
         <div style="font-family:'JetBrains Mono',monospace;font-size:10px;
-                    letter-spacing:0.15em;text-transform:uppercase;
+                    letter-spacing:0.1em;text-transform:uppercase;
                     color:{fg};opacity:0.7;margin-bottom:8px;">{label}</div>
-        <div style="font-family:'Syne',sans-serif;font-size:32px;font-weight:800;
-                    color:{fg};line-height:1;">{value}<span style="font-size:16px;
-                    opacity:0.6;">{unit}</span></div>
+        
+        <div style="font-family:'Syne',sans-serif; 
+                    font-size: 26px;
+                    font-weight:800; color:{fg}; line-height:1; 
+                    display: flex; align-items: baseline; justify-content: center;">
+            {value}
+            <span style="font-size:14px; opacity:0.6; margin-left:2px;">{unit}</span>
+        </div>
     </div>"""
 
 
