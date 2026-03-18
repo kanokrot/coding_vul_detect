@@ -79,7 +79,6 @@ def compute_metrics(tp, fp, tn, fn) -> dict:
         tp=tp, fp=fp, tn=tn, fn=fn,
     )
 
-
 # ─── Main Runner (yields progress updates) ────────────────────────────────────
 
 def run_benchmark(n_samples: int = 100):
@@ -89,7 +88,7 @@ def run_benchmark(n_samples: int = 100):
     Final yield has complete data.
     """
     if not os.path.exists(DATASET_PATH):
-        yield 0, f"❌ Dataset not found: {DATASET_PATH}", {}, []
+        yield 0, gr.Warning(f"Dataset not found: {DATASET_PATH}"), {}, []
         return
 
     samples    = load_samples(n_samples)

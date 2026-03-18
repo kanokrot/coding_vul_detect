@@ -1,0 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap');
+
+:root {
+    --bg-primary: #1a1d24;
+    --bg-secondary: #1f2330;
+    --bg-card: #252938;
+    --bg-card-hover: #2b2f42;
+    --border: #2e3347;
+    --border-accent: #3a4060;
+    --accent-cyan: #00d4ff;
+    --accent-green: #00ff88;
+    --accent-red: #ff3b5c;
+    --accent-orange: #ff8c42;
+    --text-primary: #f2f4fa;
+    --text-secondary: #b0b8d0;
+    --text-muted: #b3b8ca;
+    --glow-cyan: 0 0 20px rgba(0, 212, 255, 0.3);
+    --glow-green: 0 0 20px rgba(0, 255, 136, 0.3);
+}
+
+* { box-sizing: border-box; }
+
+body, .gradio-container {
+    background: var(--bg-primary) !important;
+    font-family: 'Syne', sans-serif !important;
+    color: var(--text-primary) !important;
+}
+
+.gradio-container {
+    max-width: 1400px !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+}
+
+/* ─── Scrollbar ─────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-primary); }
+::-webkit-scrollbar-thumb { background: var(--border-accent); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* ─── Hide Gradio Footer ────────────────────────── */
+footer,
+.gradio-container ~ footer,
+div.svelte-1ipelgc,
+.built-with {
+    display: none !important;
+}

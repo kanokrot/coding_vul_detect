@@ -3,9 +3,8 @@ import gradio as gr
 from core.scanner import hybrid_scanning_system
 
 
-# ── Detect device once at import time for accurate System Status ──────────────
+# ── Detect device once at import time ─────────────────────────────────────────
 _DEVICE = "cuda:0" if torch.cuda.is_available() else "cpu"
-
 
 def build_scanner_tab():
     with gr.TabItem("Scanner Engine"):
@@ -31,13 +30,9 @@ def build_scanner_tab():
 
                 scan_btn = gr.Button("⬡  Start Scanning", variant="primary", size="lg")
 
-                # FIX: accurate device info — reads actual hardware at runtime
-                with gr.Accordion("System Status", open=False):
-                    gr.Markdown(
-                        f"- **Model:** `CodeLlama-7b-hf`\n"
-                        f"- **Device:** `{_DEVICE}`\n"
-                        f"- **Entropy Threshold:** `4.5`"
-                    )
+                # ── System Status Accordion ถูกลบออกแล้ว ─────────────────────
+                # ข้อมูล Model / Device / Entropy / Dataset ย้ายไปอยู่ที่
+                # SYSTEM_STATUS_HTML ใน components.py (แสดงใต้ header)
 
             # ── Right: Output ──────────────────────────────────────────────────
             with gr.Column(scale=2):
@@ -48,8 +43,13 @@ def build_scanner_tab():
                     elem_classes="status-box"
                 )
 
-                # FIX: value=None prevents Gradio rendering an empty skeleton table
-                # before any scan has run
+                # ── Summary Cards ──────────────────────────────────────────────
+                summary_cards = gr.HTML(
+                    "",
+                    elem_classes="summary-cards"
+                )
+
+                # ── Detected Issues Table ──────────────────────────────────────
                 table_output = gr.Dataframe(
                     headers=[
                         "Filename", "Type", "AI Prob.",
@@ -59,7 +59,7 @@ def build_scanner_tab():
                     label="Detected Issues",
                     wrap=False,
                     elem_classes="results-table",
-                    column_widths=["20%", "35%", "10%", "10%", "12%", "17%"],
+                    column_widths=["15%", "35%", "9%", "9%", "12%", "18%"],
                     value=None,
                 )
 
@@ -70,7 +70,10 @@ def build_scanner_tab():
                 )
 
                 remediation_output = gr.Markdown(
-                    "Remediation advice will appear here.",
+                    """
+                    >**Ready to scan**  
+                    > Upload a file or enter a Git URL, then click **Start Scanning** to receive AI-powered remediation suggestions.
+                    """,
                     elem_classes="remediation-box"
                 )
 
@@ -78,18 +81,10 @@ def build_scanner_tab():
         scan_btn.click(
             fn=hybrid_scanning_system,
             inputs=[file_input, url_input],
-            outputs=[status_output, table_output, remediation_output],
-            # FIX: disable button while scanning to prevent queued duplicate scans
+            outputs=[status_output, summary_cards, table_output, remediation_output],
             api_name="scan",
-        ).then(
-            # Re-enable button after scan completes (success or error)
-            fn=None,
-            inputs=None,
-            outputs=None,
         )
 
-        # FIX: clear file input when user switches to Git tab and vice versa
-        # so both inputs are never accidentally submitted together
         file_input.change(
             fn=lambda f: gr.update(value="") if f is not None else gr.update(),
             inputs=[file_input],

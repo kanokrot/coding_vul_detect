@@ -31,7 +31,6 @@ BATCH_SIZE    = 4
 # FIX: max_samples defined once here — no need to pass it at the call site too
 MAX_SAMPLES   = 5000
 
-
 # ── Reproducibility ───────────────────────────────────────────────────────────
 # FIX: seed torch and numpy in addition to sklearn's random_state so
 # results are fully reproducible across runs

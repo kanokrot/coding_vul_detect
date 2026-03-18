@@ -1,3 +1,9 @@
+import torch
+
+# ── Detect device once at module level ────────────────────────────────────────
+_DEVICE = "cuda:0" if torch.cuda.is_available() else "cpu"
+
+
 def format_metric_card(label, value, unit="%", color="cyan") -> str:
     colors = {
         "cyan":   ("#00d4ff", "rgba(0,212,255,0.08)",  "rgba(0,212,255,0.25)"),
@@ -6,18 +12,17 @@ def format_metric_card(label, value, unit="%", color="cyan") -> str:
         "orange": ("#ff8c42", "rgba(255,140,66,0.08)",  "rgba(255,140,66,0.25)"),
     }
     fg, bg, border = colors.get(color, colors["cyan"])
-    
+
     return f"""
     <div style="background:{bg};border:1px solid {border};border-radius:8px;
-                padding:20px 8px; text-align:center; flex:1; min-width:120px; 
+                padding:20px 8px; text-align:center; flex:1; min-width:120px;
                 box-sizing: border-box; overflow: hidden;">
         <div style="font-family:'JetBrains Mono',monospace;font-size:10px;
                     letter-spacing:0.1em;text-transform:uppercase;
                     color:{fg};opacity:0.7;margin-bottom:8px;">{label}</div>
-        
-        <div style="font-family:'Syne',sans-serif; 
+        <div style="font-family:'Syne',sans-serif;
                     font-size: 26px;
-                    font-weight:800; color:{fg}; line-height:1; 
+                    font-weight:800; color:{fg}; line-height:1;
                     display: flex; align-items: baseline; justify-content: center;">
             {value}
             <span style="font-size:14px; opacity:0.6; margin-left:2px;">{unit}</span>
@@ -110,15 +115,41 @@ def build_progress_html(pct: int, msg: str) -> str:
     </div>"""
 
 
+# ── Header — ไม่มี badge แล้ว, status bar อยู่ข้างล่างแทน ───────────────────
 HEADER_HTML = """
 <div>
     <div class="header-eyebrow">Static Analysis Engine v2.0</div>
     <div class="header-title">Vuln<span>Detect</span> AI</div>
-    <div class="header-subtitle">C/C++ Vulnerability Detection · Code Llama + Shannon Entropy + Fuzzy Logic</div>
-    <div class="header-badges">
-        <span class="badge badge-cyan">⬡ CodeLlama-7b-hf</span>
-        <span class="badge badge-green">⬡ cuda:0</span>
-        <span class="badge badge-red">⬡ DiverseVul Dataset</span>
+    <div class="header-subtitle">C/C++ Vulnerability Detection · LLM + Shannon Entropy + Fuzzy Logic</div>
+</div>
+"""
+
+# ── System Status Bar — รวม model / device / entropy / dataset ──────────────
+# วางใต้ header แทน badge เดิม + แทน Accordion ใน scanner tab
+SYSTEM_STATUS_HTML = f"""
+<div class="system-status-bar">
+    <div class="status-item">
+        <span class="status-dot dot-cyan"></span>
+        <span class="status-label">Model</span>
+        <span class="status-value">CodeLlama-7b-hf</span>
+    </div>
+    <div class="status-divider"></div>
+    <div class="status-item">
+        <span class="status-dot dot-green"></span>
+        <span class="status-label">Device</span>
+        <span class="status-value">{_DEVICE}</span>
+    </div>
+    <div class="status-divider"></div>
+    <div class="status-item">
+        <span class="status-dot dot-orange"></span>
+        <span class="status-label">Entropy Threshold</span>
+        <span class="status-value">4.5</span>
+    </div>
+    <div class="status-divider"></div>
+    <div class="status-item">
+        <span class="status-dot dot-red"></span>
+        <span class="status-label">Dataset</span>
+        <span class="status-value">DiverseVul</span>
     </div>
 </div>
 """
@@ -147,7 +178,6 @@ THEME_TOGGLE_HTML = """
 " id="theme-btn">⏾ DARK</button>
 
 <script>
-    // Restore saved theme on page load
     const saved = localStorage.getItem('theme') || 'dark';
     document.body.setAttribute('data-theme', saved);
     setTimeout(() => {

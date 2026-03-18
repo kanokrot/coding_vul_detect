@@ -1,0 +1,245 @@
+/* ─── Header ────────────────────────────────────── */
+.app-header {
+    background: linear-gradient(135deg, #1a1d24 0%, #222636 50%, #1c2030 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 32px 40px 28px;
+    position: relative;
+    overflow: hidden;
+}
+
+.app-header::before {
+    content: '';
+    position: absolute;
+    top: -60px; left: -60px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(0,212,255,0.08) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.app-header::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; right: 100px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(0,255,136,0.06) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.header-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    color: var(--accent-cyan);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.header-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 24px; height: 1px;
+    background: var(--accent-cyan);
+    opacity: 0.6;
+}
+
+.header-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin: 0 0 10px;
+}
+
+.header-title span { color: var(--accent-cyan); }
+
+.header-subtitle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--text-secondary);
+    letter-spacing: 0.03em;
+}
+
+.header-badges {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+    flex-wrap: wrap;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid;
+}
+
+.badge-cyan  { color: var(--accent-cyan);  border-color: rgba(0,212,255,0.25);  background: rgba(0,212,255,0.06); }
+.badge-green { color: var(--accent-green); border-color: rgba(0,255,136,0.25);  background: rgba(0,255,136,0.06); }
+.badge-red   { color: var(--accent-red);   border-color: rgba(255,59,92,0.25);   background: rgba(255,59,92,0.06); }
+
+/* ─── Tabs ──────────────────────────────────────── */
+.tabs > .tab-nav {
+    background: var(--bg-secondary) !important;
+    border-bottom: 1px solid var(--border) !important;
+    padding: 0 40px !important;
+    gap: 0 !important;
+}
+
+.tabs > .tab-nav button {
+    font-family: 'Syne', sans-serif !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.05em !important;
+    color: var(--text-secondary) !important;
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 2px solid transparent !important;
+    padding: 14px 20px !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    transition: all 0.2s !important;
+    text-transform: uppercase !important;
+}
+
+.tabs > .tab-nav button:hover { color: var(--text-primary) !important; }
+
+.tabs > .tab-nav button.selected {
+    color: var(--accent-cyan) !important;
+    border-bottom-color: var(--accent-cyan) !important;
+    background: transparent !important;
+}
+
+/* ─── Inner Tabs (Upload / Git) ─────────────────── */
+.tabs .tabs > .tab-nav {
+    padding: 0 !important;
+    background: transparent !important;
+    border-bottom: 1px solid var(--border) !important;
+}
+
+.tabs .tabs > .tab-nav button {
+    font-size: 11px !important;
+    padding: 10px 16px !important;
+}
+
+/* ─── Tab Content ───────────────────────────────── */
+.tabitem {
+    background: var(--bg-primary) !important;
+    padding: 32px 40px !important;
+    border: none !important;
+}
+
+/* ─── Section headings ──────────────────────────── */
+.section-heading {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin: 0 0 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.section-heading::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+}
+
+/* ─── Labels ────────────────────────────────────── */
+label, .label-wrap span, .block label span {
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: 11px !important;
+    letter-spacing: 0.08em !important;
+    text-transform: uppercase !important;
+    color: var(--text-secondary) !important;
+    font-weight: 600 !important;
+}
+
+/* ─── Inputs ────────────────────────────────────── */
+input[type="text"], textarea, .gr-textbox textarea {
+    background: var(--bg-secondary) !important;
+    border: 1px solid var(--border-accent) !important;
+    border-radius: 6px !important;
+    color: var(--text-primary) !important;
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: 13px !important;
+    padding: 10px 14px !important;
+    transition: border-color 0.2s, box-shadow 0.2s !important;
+}
+
+input[type="text"]:focus, textarea:focus {
+    border-color: var(--accent-cyan) !important;
+    box-shadow: 0 0 0 3px rgba(0,212,255,0.1) !important;
+    outline: none !important;
+}
+
+input::placeholder, textarea::placeholder { color: var(--text-muted) !important; }
+
+/* ─── Warning ───────────────────────────────────── */
+.gr-warning {
+    background: rgba(255,140,66,0.08) !important;
+    border: 1px solid rgba(255,140,66,0.3) !important;
+    border-radius: 6px !important;
+    color: var(--accent-orange) !important;
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: 12px !important;
+    padding: 12px 16px !important;
+}
+
+/* ─── Markdown prose ────────────────────────────── */
+.gr-markdown p, .gr-markdown li {
+    font-size: 13px !important;
+    line-height: 1.7 !important;
+    color: var(--text-secondary) !important;
+    font-family: 'JetBrains Mono', monospace !important;
+}
+
+.gr-markdown code {
+    background: var(--bg-secondary) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 3px !important;
+    padding: 2px 6px !important;
+    font-size: 11px !important;
+    color: var(--accent-cyan) !important;
+}
+
+/* ─── Accordion ─────────────────────────────────── */
+.gr-accordion, details {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 6px !important;
+}
+
+details summary {
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: 11px !important;
+    letter-spacing: 0.1em !important;
+    text-transform: uppercase !important;
+    color: var(--text-muted) !important;
+    padding: 10px 14px !important;
+    cursor: pointer !important;
+}
+
+details[open] summary { border-bottom: 1px solid var(--border) !important; }
+
+details .gr-markdown {
+    padding: 14px !important;
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: 12px !important;
+    color: var(--text-secondary) !important;
+    line-height: 1.7 !important;
+}

@@ -1,0 +1,44 @@
+/* ─── Summary Cards ─────────────────────────────── */
+.summary-cards {
+    margin: 8px 0 12px;
+}
+
+.summary-card {
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: bold;
+    font-size: 13px;
+    flex: 1;
+    text-align: center;
+    letter-spacing: 0.05em;
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.summary-card:hover {
+    transform: translateY(-2px);
+}
+
+.summary-card.critical {
+    background: rgba(200,0,0,0.15);
+    border: 1px solid #c00;
+    color: #ff6b6b;
+}
+
+.summary-card.high {
+    background: rgba(200,100,0,0.15);
+    border: 1px solid #c60;
+    color: #ffa94d;
+}
+
+.summary-card.medium {
+    background: rgba(200,180,0,0.15);
+    border: 1px solid #990;
+    color: #ffd43b;
+}
+
+.summary-card.low {
+    background: rgba(0,150,0,0.15);
+    border: 1px solid #060;
+    color: #69db7c;
+}
